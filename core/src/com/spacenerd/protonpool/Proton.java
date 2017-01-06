@@ -12,14 +12,12 @@ public class Proton {
     public String name;
     public Vector2 position;
     public Vector2 velocity;
-    private Circle boundingCircle;
     private Sprite sprite;
 
     public Proton(String name, Vector2 position, Vector2 velocity){
         this.name = name;
         this.position = position;
         this.velocity = velocity;
-        this.boundingCircle = new Circle();
         sprite = new Sprite(texture);
     }
 
@@ -29,6 +27,12 @@ public class Proton {
     }
 
     public void step(){
+        if(position.x + sprite.getWidth() >= Gdx.graphics.getWidth() || position.x <= 0){
+            velocity.x *= -1;
+        }
+        if(position.y + sprite.getHeight() >= Gdx.graphics.getHeight() || position.y <= 0){
+            velocity.y *= -1;
+        }
         position.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
     }
 }

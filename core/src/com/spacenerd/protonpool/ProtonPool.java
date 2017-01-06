@@ -16,15 +16,12 @@ public class ProtonPool extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-//        AssetManager manager = new AssetManager();
-//        manager.load("proton.png", Texture.class);
-//        Proton.texture = manager.get("proton.png");
         Proton.texture = new Texture(Gdx.files.internal("proton.png"));
 
 		batch = new SpriteBatch();
 
         protons = new ArrayList<Proton>();
-        protons.add(new Proton("TEST", new Vector2(200, 200), new Vector2(2, 2)));
+        protons.add(new Proton("TEST", new Vector2(200, 200), new Vector2(179, 96)));
 	}
 
 	@Override
