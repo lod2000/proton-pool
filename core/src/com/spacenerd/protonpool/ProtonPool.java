@@ -26,7 +26,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	public void create () {
         prefs = Gdx.app.getPreferences("Preferences");
         prefs.putBoolean("velocityLines", true);
-        prefs.putBoolean("accelerationLines", false);
+        prefs.putBoolean("accelerationLines", true);
         prefs.flush();
 
         Gdx.input.setInputProcessor(this);
@@ -36,12 +36,12 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		batch = new SpriteBatch();
 
         protons = new ArrayList<Proton>();
-        protons.add(new Proton("Thing0",
+        protons.add(new Proton(
                 new Vector2(200, 200),
                 new Vector2(100, 10),
                 new Vector2(0,0)
         ));
-        protons.add(new Proton("Thing1",
+        protons.add(new Proton(
                 new Vector2(800, 50),
                 new Vector2(-20, -18),
                 new Vector2(0,0)
@@ -143,7 +143,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         if(Gdx.graphics.getHeight() - screenY < Proton.radius){
             screenY = Gdx.graphics.getHeight() - Proton.radius;
         }
-        protons.add(new Proton("Thing" + protons.size(),
+        protons.add(new Proton(
                 new Vector2(screenX, Gdx.graphics.getHeight() - screenY),
                 new Vector2(0, 0),
                 new Vector2(0, 0)

@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Proton {
     public static Texture texture;
-    public String name;
     public Vector2 position;
     public Vector2 velocity;
     public Vector2 acceleration;
@@ -18,8 +17,7 @@ public class Proton {
 
     public static final int radius = 30;
 
-    public Proton(String name, Vector2 position, Vector2 velocity, Vector2 acceleration){
-        this.name = name;
+    public Proton(Vector2 position, Vector2 velocity, Vector2 acceleration){
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
