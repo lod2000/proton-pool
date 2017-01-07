@@ -34,7 +34,7 @@ public class Proton {
     }
 
     public void step(){
-        Gdx.app.log("Proton", acceleration + "");
+//        Gdx.app.log("Proton", acceleration + "");
         velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
         if(position.x + radius >= Gdx.graphics.getWidth() || position.x - radius <= 0){
             velocity.x *= -1;

@@ -3,6 +3,7 @@ package com.spacenerd.protonpool;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,9 +20,15 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
     private static final float forceConstant = 100000;
     private ShapeRenderer shapeRenderer; //debugging only
     private OrthographicCamera camera;
+    private Preferences prefs;
 	
 	@Override
 	public void create () {
+        prefs = Gdx.app.getPreferences("Preferences");
+        prefs.putBoolean("velocityLines", true);
+        prefs.putBoolean("accelerationLines", false);
+        prefs.flush();
+
         Gdx.input.setInputProcessor(this);
 
         Proton.texture = new Texture(Gdx.files.internal("proton.png"));
@@ -29,12 +36,12 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		batch = new SpriteBatch();
 
         protons = new ArrayList<Proton>();
-        protons.add(new Proton("Thing1",
+        protons.add(new Proton("Thing0",
                 new Vector2(200, 200),
                 new Vector2(100, 10),
                 new Vector2(0,0)
         ));
-        protons.add(new Proton("Thing2",
+        protons.add(new Proton("Thing1",
                 new Vector2(800, 50),
                 new Vector2(-20, -18),
                 new Vector2(0,0)
@@ -49,8 +56,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-//        shapeRenderer.setProjectionMatrix(camera);
-
 		batch.begin();
         for(Proton proton: protons){
             sumForce();
@@ -61,8 +66,14 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for(Proton proton: protons){
-            shapeRenderer.setColor(0, 0, 1, 1);
-            shapeRenderer.line(proton.position, proton.position.cpy().add(proton.acceleration.scl(100)));
+            if(prefs.getBoolean("accelerationLines", false)){
+                shapeRenderer.setColor(0, 0, 1, 1);
+                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.acceleration.scl(100)));
+            }
+            if(prefs.getBoolean("velocityLines", false)){
+                shapeRenderer.setColor(0, 1, 0, 1);
+                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.velocity));
+            }
         }
         shapeRenderer.end();
 
