@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	private SpriteBatch batch;
 	private ArrayList<Proton> protons;
-    private static final float forceConstant = 100000;
+    private static final float forceConstant = 1000000;
     private ShapeRenderer shapeRenderer; //debugging only
     private OrthographicCamera camera;
     private Preferences prefs;
@@ -36,16 +36,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		batch = new SpriteBatch();
 
         protons = new ArrayList<Proton>();
-        protons.add(new Proton(
-                new Vector2(200, 200),
-                new Vector2(100, 10),
-                new Vector2(0,0)
-        ));
-        protons.add(new Proton(
-                new Vector2(800, 50),
-                new Vector2(-20, -18),
-                new Vector2(0,0)
-        ));
 
         shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -68,7 +58,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         for(Proton proton: protons){
             if(prefs.getBoolean("accelerationLines", false)){
                 shapeRenderer.setColor(0, 0, 1, 1);
-                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.acceleration.scl(100)));
+                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.acceleration));
             }
             if(prefs.getBoolean("velocityLines", false)){
                 shapeRenderer.setColor(0, 1, 0, 1);
