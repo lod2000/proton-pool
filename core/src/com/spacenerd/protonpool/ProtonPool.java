@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,8 +17,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	private SpriteBatch batch;
 	private ArrayList<Proton> protons;
     private static final float forceConstant = 1000000;
-    private ShapeRenderer shapeRenderer; //debugging only
-    private OrthographicCamera camera;
+    private ShapeRenderer shapeRenderer;
     private Preferences prefs;
 	
 	@Override
@@ -38,7 +36,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         protons = new ArrayList<Proton>();
 
         shapeRenderer = new ShapeRenderer();
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -73,7 +70,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		batch.dispose();
 	}
 
-    public void sumForce(){
+    private void sumForce(){
         for(Proton target: protons){
             Vector2 acceleration = new Vector2();
             for(Proton other: protons){
