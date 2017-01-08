@@ -66,13 +66,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
             }
         }
         shapeRenderer.end();
-
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        for(Proton proton: protons){
-//            shapeRenderer.setColor(0, 1, 0, 1);
-//            shapeRenderer.line(proton.position, proton.position.cpy().add(proton.velocity.scl(10)));
-//        }
-//        shapeRenderer.end();
 	}
 	
 	@Override
@@ -89,15 +82,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
                     Vector2 partialAcceleration = new Vector2(1, 1)
                             .setLength((float) (forceConstant / Math.pow(distance.len(), 2)))
                             .setAngle(distance.angle());
-//                            (float) (forceConstant / Math.pow(distance.len2(), 2)),
-//                            (float) (forceConstant / Math.pow(distance.len, 2))
-//                    );
-//                    Gdx.app.log("ProtonPool", "" + partialAcceleration);
                     acceleration.add(partialAcceleration);
-//                    if(target.collisionCircle.overlaps(other.collisionCircle)){
-//                        Vector2 distance = target.position.cpy().sub(other.position.cpy());
-//                        distance.rotate(90);
-//                    }
                 }
             }
             target.acceleration = acceleration;
@@ -121,6 +106,11 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if(screenX < Proton.radius){
             screenX = Proton.radius;
         }
@@ -139,11 +129,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
                 new Vector2(0, 0)
         ));
         return true;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
     }
 
     @Override
