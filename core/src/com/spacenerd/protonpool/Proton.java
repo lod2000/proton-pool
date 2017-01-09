@@ -25,29 +25,29 @@ public class Proton {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        sprite = new Sprite(texture, 2 * getProtonRadius(), 2 * getProtonRadius());
+        sprite = new Sprite(texture, 2 * getRadius(), 2 * getRadius());
         collisionCircle = new Circle(position, sizeRatio);
     }
 
     public void draw(SpriteBatch batch){
         collisionCircle.setPosition(position);
-        sprite.setPosition(position.x - getProtonRadius(), position.y - getProtonRadius());
-        sprite.setSize(2 * getProtonRadius(), 2 * getProtonRadius());
+        sprite.setPosition(position.x - getRadius(), position.y - getRadius());
+        sprite.setSize(2 * getRadius(), 2 * getRadius());
         sprite.draw(batch);
     }
 
     public void step(){
         velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
-        if(position.x + getProtonRadius() >= Gdx.graphics.getWidth() || position.x - getProtonRadius() <= 0){
+        if(position.x + getRadius() >= Gdx.graphics.getWidth() || position.x - getRadius() <= 0){
             velocity.x *= -1;
         }
-        if(position.y + getProtonRadius() >= Gdx.graphics.getHeight() || position.y - getProtonRadius() <= 0){
+        if(position.y + getRadius() >= Gdx.graphics.getHeight() || position.y - getRadius() <= 0){
             velocity.y *= -1;
         }
         position.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
     }
 
-    public int getProtonRadius(){
+    public int getRadius(){
         return Math.round(sizeRatio * (float) Math.sqrt(mass));
     }
 }
