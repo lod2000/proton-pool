@@ -14,7 +14,7 @@ public class Proton {
     public Vector2 velocity;
     public Vector2 acceleration;
     private Sprite sprite;
-    public Circle collisionCircle;
+    public static int radius;
 
     private static final String TAG = "Proton";
 
@@ -25,29 +25,45 @@ public class Proton {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        sprite = new Sprite(texture, 2 * getRadius(), 2 * getRadius());
-        collisionCircle = new Circle(position, sizeRatio);
+        sprite = new Sprite(texture, 2 * radius, 2 * radius);
     }
 
     public void draw(SpriteBatch batch){
-        collisionCircle.setPosition(position);
-        sprite.setPosition(position.x - getRadius(), position.y - getRadius());
-        sprite.setSize(2 * getRadius(), 2 * getRadius());
+        sprite.setPosition(position.x - radius, position.y - radius);
+        sprite.setSize(2 * radius, 2 * radius);
         sprite.draw(batch);
     }
 
+    // Calculates new velocities and positions for proton
     public void step(){
-        velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
-        if(position.x + getRadius() >= Gdx.graphics.getWidth() || position.x - getRadius() <= 0){
+        radius = Math.round(sizeRatio * (float) Math.sqrt(mass));
+
+        // Shift proton if it overlaps edge
+        if(position.x < radius){
+            position.x = radius;
+        }
+        if(Gdx.graphics.getWidth() - position.x < radius){
+            position.x = Gdx.graphics.getWidth() - radius;
+        }
+        if(position.y < radius){
+            position.y = radius;
+        }
+        if(Gdx.graphics.getHeight() - position.y < radius){
+            position.y = Gdx.graphics.getHeight() - radius;
+        }
+
+        // Reverse velocity if proton hits edge
+        if(position.x + radius >= Gdx.graphics.getWidth() || position.x - radius <= 0){
             velocity.x *= -1;
         }
-        if(position.y + getRadius() >= Gdx.graphics.getHeight() || position.y - getRadius() <= 0){
+        if(position.y + radius >= Gdx.graphics.getHeight() || position.y - radius <= 0){
             velocity.y *= -1;
         }
-        position.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
-    }
 
-    public int getRadius(){
-        return Math.round(sizeRatio * (float) Math.sqrt(mass));
+        // Change position by velocity
+        position.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
+
+        // Change velocity by acceleration
+        velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
     }
 }
