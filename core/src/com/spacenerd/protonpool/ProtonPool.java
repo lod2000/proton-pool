@@ -19,6 +19,8 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
     private ShapeRenderer shapeRenderer;
     private Preferences prefs;
     private ArrayList<Proton> toRemove;
+
+    private static final String TAG = "ProtonPool";
 	
 	@Override
 	public void create () {

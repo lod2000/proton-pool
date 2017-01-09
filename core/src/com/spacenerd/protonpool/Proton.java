@@ -18,14 +18,14 @@ public class Proton {
 
     private static final String TAG = "Proton";
 
-    public static int sizeRatio = 30;
+    public static int sizeRatio = Math.round(10 * Gdx.graphics.getDensity());
 
     public Proton(int mass, Vector2 position, Vector2 velocity, Vector2 acceleration){
         this.mass = mass;
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        radius = Math.round(sizeRatio * (float) Math.sqrt(mass));
+        radius = sizeRatio; // Initial radius
         sprite = new Sprite(texture, 2 * radius, 2 * radius);
     }
 
@@ -37,6 +37,9 @@ public class Proton {
 
     // Calculates new velocities and positions for proton
     public void step(){
+        // Calculate proton radius
+        radius = Math.round(sizeRatio * (float) Math.sqrt(mass));
+
         // Shift proton if it overlaps edge
         if(position.x < radius){
             position.x = radius;
