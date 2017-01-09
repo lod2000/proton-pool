@@ -92,9 +92,14 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
                     if(distance.len() < (main.radius + other.radius) / 2
                             && !toRemove.contains(main)
                             && main.mass >= other.mass){
-                        main.velocity = other.velocity.scl(other.mass).add(main.velocity.scl(main.mass)).scl(1 / (other.mass + main.mass));
+                        main.velocity = other.velocity
+                                .scl(other.mass)
+                                .add(main.velocity.scl(main.mass))
+                                .scl(1 / (other.mass + main.mass));
                         main.mass += other.mass;
                         toRemove.add(other);
+                        Gdx.app.log(TAG, "Merge event at " + main.position);
+                        Gdx.app.log(TAG, "Merge mass: " + main.mass);
                     }
                 }
             }
@@ -130,6 +135,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
                 new Vector2(0, 0), // Velocity
                 new Vector2(0, 0) // Acceleration
         ));
+        Gdx.app.log(TAG, "Added proton at (" + screenX + ", " + screenY + ")");
         return true;
     }
 

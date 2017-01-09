@@ -29,12 +29,6 @@ public class Proton {
         sprite = new Sprite(texture, 2 * radius, 2 * radius);
     }
 
-    public void draw(SpriteBatch batch){
-        sprite.setPosition(position.x - radius, position.y - radius);
-        sprite.setSize(2 * radius, 2 * radius);
-        sprite.draw(batch);
-    }
-
     // Calculates new velocities and positions for proton
     public void step(){
         // Calculate proton radius
@@ -67,5 +61,11 @@ public class Proton {
 
         // Change velocity by acceleration
         velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
+    }
+
+    public void draw(SpriteBatch batch){
+        sprite.setPosition(position.x - radius, position.y - radius);
+        sprite.setSize(2 * radius, 2 * radius);
+        sprite.draw(batch);
     }
 }
