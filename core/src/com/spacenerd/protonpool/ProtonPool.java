@@ -46,7 +46,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
-
         force(); // Calculate forces between protons, find collisions
         for(int i = 0; i < toRemove.size(); i++){
             protons.remove(toRemove.get(i)); // Remove protons that have collided and merged
@@ -77,6 +76,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	}
 
     private void force(){
+        toRemove = new ArrayList<Proton>();
         for(Proton main: protons){
             Vector2 force = new Vector2();
             for(Proton other: protons){

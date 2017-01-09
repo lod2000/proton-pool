@@ -25,6 +25,7 @@ public class Proton {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
+        radius = Math.round(sizeRatio * (float) Math.sqrt(mass));
         sprite = new Sprite(texture, 2 * radius, 2 * radius);
     }
 
@@ -36,8 +37,6 @@ public class Proton {
 
     // Calculates new velocities and positions for proton
     public void step(){
-        radius = Math.round(sizeRatio * (float) Math.sqrt(mass));
-
         // Shift proton if it overlaps edge
         if(position.x < radius){
             position.x = radius;
