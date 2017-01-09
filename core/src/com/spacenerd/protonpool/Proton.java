@@ -2,20 +2,14 @@ package com.spacenerd.protonpool;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Proton {
-//    public static Texture texture;
     public int mass;
     public Vector2 position;
     public Vector2 velocity;
     public Vector2 acceleration;
-//    private Sprite sprite;
     public static int radius;
 
     private static final String TAG = "Proton";
@@ -28,7 +22,6 @@ public class Proton {
         this.velocity = velocity;
         this.acceleration = acceleration;
         radius = sizeRatio; // Initial radius
-//        sprite = new Sprite(texture, 2 * radius, 2 * radius);
     }
 
     // Calculates new velocities and positions for proton
@@ -64,12 +57,6 @@ public class Proton {
         // Change velocity by acceleration
         velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
     }
-
-//    public void draw(SpriteBatch batch){
-//        sprite.setPosition(position.x - radius, position.y - radius);
-//        sprite.setSize(2 * radius, 2 * radius);
-//        sprite.draw(batch);
-//    }
 
     public void draw(ShapeRenderer shapeRenderer){
         Preferences prefs = Gdx.app.getPreferences("Preferences");
