@@ -48,6 +48,6 @@ public class Proton {
     }
 
     public int getProtonRadius(){
-        return initialRadius + size - 1;
+        return initialRadius + 1 * (size - 1);
     }
 }

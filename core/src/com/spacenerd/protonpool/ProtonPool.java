@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	private SpriteBatch batch;
 	private ArrayList<Proton> protons;
-    private static final float forceConstant = 100000;
+    private static final float forceConstant = 500000;
     private ShapeRenderer shapeRenderer;
     private Preferences prefs;
     private ArrayList<Proton> toRemove;
@@ -46,8 +46,9 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.begin();
+
+        force();
         for(Proton proton: protons){
-            interact();
             proton.step();
             proton.draw(batch);
         }
@@ -75,27 +76,47 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		batch.dispose();
 	}
 
-    private void interact(){
+    private void force(){
         for(Proton target: protons){
-            Vector2 acceleration = new Vector2();
+            Vector2 force = new Vector2();
             for(Proton other: protons){
                 if(other != target){
                     Vector2 distance = target.position.cpy().sub(other.position.cpy());
-                    Vector2 partialAcceleration = new Vector2(1, 1)
+//                    Vector2 distance = target.position.dst(other.position);
+                    Vector2 partialForce = new Vector2(1, 1)
                             .setLength((float) (forceConstant * other.size * target.size /
                                     Math.pow(distance.len(), 2)))
                             .setAngle(distance.angle());
-                    acceleration.add(partialAcceleration);
+                    force.add(partialForce);
                     if(distance.len() < Proton.initialRadius
                             && !toRemove.contains(target)
                             && target.size >= other.size){
+                        target.velocity = other.velocity.scl(other.size).add(target.velocity.scl(target.size)).scl(1 / (other.size + target.size));
+                        target.size += other.size;
+                        toRemove.add(other);
+//                        Gdx.app.log("ProtonPool", "" + target.size);
+                    }
+                }
+            }
+            target.acceleration = force.scl(1 / (float) target.size);
+        }
+    }
+
+    private void collision(){
+        for(Proton target: protons){
+            for(Proton other: protons){
+                if(other != target){
+                    Vector2 distance = target.position.cpy().sub(other.position.cpy());
+                    if(distance.len() < Proton.initialRadius
+                            && !toRemove.contains(target)
+                            && target.size >= other.size){
+                        target.velocity = other.velocity.scl(other.size).add(target.velocity.scl(target.size)).scl(1 / (other.size + target.size));
                         target.size += other.size;
                         toRemove.add(other);
                         Gdx.app.log("ProtonPool", "" + target.size);
                     }
                 }
             }
-            target.acceleration = acceleration;
         }
     }
 
