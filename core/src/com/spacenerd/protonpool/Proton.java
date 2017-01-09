@@ -1,19 +1,21 @@
 package com.spacenerd.protonpool;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Proton {
-    public static Texture texture;
+//    public static Texture texture;
     public int mass;
     public Vector2 position;
     public Vector2 velocity;
     public Vector2 acceleration;
-    private Sprite sprite;
+//    private Sprite sprite;
     public static int radius;
 
     private static final String TAG = "Proton";
@@ -26,7 +28,7 @@ public class Proton {
         this.velocity = velocity;
         this.acceleration = acceleration;
         radius = sizeRatio; // Initial radius
-        sprite = new Sprite(texture, 2 * radius, 2 * radius);
+//        sprite = new Sprite(texture, 2 * radius, 2 * radius);
     }
 
     // Calculates new velocities and positions for proton
@@ -63,9 +65,23 @@ public class Proton {
         velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
     }
 
-    public void draw(SpriteBatch batch){
-        sprite.setPosition(position.x - radius, position.y - radius);
-        sprite.setSize(2 * radius, 2 * radius);
-        sprite.draw(batch);
+//    public void draw(SpriteBatch batch){
+//        sprite.setPosition(position.x - radius, position.y - radius);
+//        sprite.setSize(2 * radius, 2 * radius);
+//        sprite.draw(batch);
+//    }
+
+    public void draw(ShapeRenderer shapeRenderer){
+        Preferences prefs = Gdx.app.getPreferences("Preferences");
+        shapeRenderer.setColor(0.7f, 0, 0, 1);
+        shapeRenderer.circle(position.x, position.y, radius);
+        if(prefs.getBoolean("showVelocity", false)){
+            shapeRenderer.setColor(0, 1, 0, 1);
+            shapeRenderer.line(position, position.cpy().add(velocity));
+        }
+        if(prefs.getBoolean("showAcceleration", false)){
+            shapeRenderer.setColor(0, 0, 1, 1);
+            shapeRenderer.line(position, position.cpy().add(acceleration));
+        }
     }
 }

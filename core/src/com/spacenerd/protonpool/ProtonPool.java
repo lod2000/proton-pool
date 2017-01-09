@@ -13,11 +13,11 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class ProtonPool extends ApplicationAdapter implements InputProcessor {
-	private SpriteBatch batch;
+//	private SpriteBatch batch;
 	private ArrayList<Proton> protons;
     private static final float forceConstant = 500000;
     private ShapeRenderer shapeRenderer;
-    private Preferences prefs;
+    public Preferences prefs;
     private ArrayList<Proton> toRemove;
 
     private static final String TAG = "ProtonPool";
@@ -25,15 +25,15 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public void create () {
         prefs = Gdx.app.getPreferences("Preferences");
-        prefs.putBoolean("velocityLines", true);
-        prefs.putBoolean("accelerationLines", true);
+        prefs.putBoolean("showVelocity", true);
+        prefs.putBoolean("showAcceleration", true);
         prefs.flush();
 
         Gdx.input.setInputProcessor(this);
 
-        Proton.texture = new Texture(Gdx.files.internal("proton.png"));
+//        Proton.texture = new Texture(Gdx.files.internal("proton.png"));
 
-		batch = new SpriteBatch();
+//		batch = new SpriteBatch();
 
         protons = new ArrayList<Proton>();
 
@@ -47,34 +47,46 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		batch.begin();
-        force(); // Calculate forces between protons, find collisions
-        for(int i = 0; i < toRemove.size(); i++){
-            protons.remove(toRemove.get(i)); // Remove protons that have collided and merged
-        }
-        for(Proton proton: protons){
-            proton.step(); // Calculate new velocities, positions for protons
-            proton.draw(batch); // Draw protons
-        }
-		batch.end();
+//		batch.begin();
+//        force(); // Calculate forces between protons, find collisions
+//        for(int i = 0; i < toRemove.size(); i++){
+//            protons.remove(toRemove.get(i)); // Remove protons that have collided and merged
+//        }
+//        for(Proton proton: protons){
+//            proton.step(); // Calculate new velocities, positions for protons
+//            proton.draw(batch); // Draw protons
+//        }
+//		batch.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for(Proton proton: protons){
-            if(prefs.getBoolean("accelerationLines", false)){
-                shapeRenderer.setColor(0, 0, 1, 1);
-                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.acceleration));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            force(); // Calculate forces between protons, find collisions
+            for(int i = 0; i < toRemove.size(); i++){
+                protons.remove(toRemove.get(i)); // Remove protons that have collided and merged
             }
-            if(prefs.getBoolean("velocityLines", false)){
-                shapeRenderer.setColor(0, 1, 0, 1);
-                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.velocity));
+            for(Proton proton: protons){
+                proton.step(); // Calculate new velocities, positions for protons
+                proton.draw(shapeRenderer); // Draw protons
             }
-        }
         shapeRenderer.end();
+
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        for(Proton proton: protons){
+//            if(prefs.getBoolean("accelerationLines", false)){
+//                shapeRenderer.setColor(0, 0, 1, 1);
+//                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.acceleration));
+//            }
+//            if(prefs.getBoolean("velocityLines", false)){
+//                shapeRenderer.setColor(0, 1, 0, 1);
+//                shapeRenderer.line(proton.position, proton.position.cpy().add(proton.velocity));
+//            }
+//        }
+//        shapeRenderer.end();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
+//		batch.dispose();
+        shapeRenderer.dispose();
 	}
 
     private void force(){
