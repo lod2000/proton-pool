@@ -82,23 +82,21 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
             for(Proton other: protons){
                 if(other != target){
                     Vector2 distance = target.position.cpy().sub(other.position.cpy());
-//                    Vector2 distance = target.position.dst(other.position);
                     Vector2 partialForce = new Vector2(1, 1)
-                            .setLength((float) (forceConstant * other.size * target.size /
+                            .setLength((float) (forceConstant * other.mass * target.mass /
                                     Math.pow(distance.len(), 2)))
                             .setAngle(distance.angle());
                     force.add(partialForce);
-                    if(distance.len() < Proton.initialRadius
+                    if(distance.len() < Proton.sizeRatio
                             && !toRemove.contains(target)
-                            && target.size >= other.size){
-                        target.velocity = other.velocity.scl(other.size).add(target.velocity.scl(target.size)).scl(1 / (other.size + target.size));
-                        target.size += other.size;
+                            && target.mass >= other.mass){
+                        target.velocity = other.velocity.scl(other.mass).add(target.velocity.scl(target.mass)).scl(1 / (other.mass + target.mass));
+                        target.mass += other.mass;
                         toRemove.add(other);
-//                        Gdx.app.log("ProtonPool", "" + target.size);
                     }
                 }
             }
-            target.acceleration = force.scl(1 / (float) target.size);
+            target.acceleration = force.scl(1 / (float) target.mass);
         }
     }
 
@@ -107,13 +105,13 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
             for(Proton other: protons){
                 if(other != target){
                     Vector2 distance = target.position.cpy().sub(other.position.cpy());
-                    if(distance.len() < Proton.initialRadius
+                    if(distance.len() < Proton.sizeRatio
                             && !toRemove.contains(target)
-                            && target.size >= other.size){
-                        target.velocity = other.velocity.scl(other.size).add(target.velocity.scl(target.size)).scl(1 / (other.size + target.size));
-                        target.size += other.size;
+                            && target.mass >= other.mass){
+                        target.velocity = other.velocity.scl(other.mass).add(target.velocity.scl(target.mass)).scl(1 / (other.mass + target.mass));
+                        target.mass += other.mass;
                         toRemove.add(other);
-                        Gdx.app.log("ProtonPool", "" + target.size);
+                        Gdx.app.log("ProtonPool", "" + target.mass);
                     }
                 }
             }
@@ -142,20 +140,20 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if(screenX < Proton.initialRadius){
-            screenX = Proton.initialRadius;
+        if(screenX < Proton.sizeRatio){
+            screenX = Proton.sizeRatio;
         }
-        if(Gdx.graphics.getWidth() - screenX < Proton.initialRadius){
-            screenX = Gdx.graphics.getWidth() - Proton.initialRadius;
+        if(Gdx.graphics.getWidth() - screenX < Proton.sizeRatio){
+            screenX = Gdx.graphics.getWidth() - Proton.sizeRatio;
         }
-        if(screenY < Proton.initialRadius){
-            screenY = Proton.initialRadius;
+        if(screenY < Proton.sizeRatio){
+            screenY = Proton.sizeRatio;
         }
-        if(Gdx.graphics.getHeight() - screenY < Proton.initialRadius){
-            screenY = Gdx.graphics.getHeight() - Proton.initialRadius;
+        if(Gdx.graphics.getHeight() - screenY < Proton.sizeRatio){
+            screenY = Gdx.graphics.getHeight() - Proton.sizeRatio;
         }
         protons.add(new Proton(
-                1, //size
+                1, //mass
                 new Vector2(screenX, Gdx.graphics.getHeight() - screenY), //position
                 new Vector2(0, 0), //velocity
                 new Vector2(0, 0) //acceleration

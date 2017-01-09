@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Proton {
     public static Texture texture;
-    public int size;
+    public int mass;
     public Vector2 position;
     public Vector2 velocity;
     public Vector2 acceleration;
@@ -18,15 +18,15 @@ public class Proton {
 
     private static final String TAG = "Proton";
 
-    public static int initialRadius = 30;
+    public static int sizeRatio = 30;
 
-    public Proton(int size, Vector2 position, Vector2 velocity, Vector2 acceleration){
-        this.size = size;
+    public Proton(int mass, Vector2 position, Vector2 velocity, Vector2 acceleration){
+        this.mass = mass;
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
         sprite = new Sprite(texture, 2 * getProtonRadius(), 2 * getProtonRadius());
-        collisionCircle = new Circle(position, initialRadius);
+        collisionCircle = new Circle(position, sizeRatio);
     }
 
     public void draw(SpriteBatch batch){
@@ -38,16 +38,16 @@ public class Proton {
 
     public void step(){
         velocity.add(acceleration.cpy().scl(Gdx.graphics.getDeltaTime()));
-        if(position.x + initialRadius >= Gdx.graphics.getWidth() || position.x - initialRadius <= 0){
+        if(position.x + getProtonRadius() >= Gdx.graphics.getWidth() || position.x - getProtonRadius() <= 0){
             velocity.x *= -1;
         }
-        if(position.y + initialRadius >= Gdx.graphics.getHeight() || position.y - initialRadius <= 0){
+        if(position.y + getProtonRadius() >= Gdx.graphics.getHeight() || position.y - getProtonRadius() <= 0){
             velocity.y *= -1;
         }
         position.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
     }
 
     public int getProtonRadius(){
-        return initialRadius + 1 * (size - 1);
+        return Math.round(sizeRatio * (float) Math.sqrt(mass));
     }
 }
