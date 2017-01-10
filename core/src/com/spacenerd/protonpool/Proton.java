@@ -10,10 +10,11 @@ public class Proton {
     public Vector2 position;
     public Vector2 velocity;
     public Vector2 acceleration;
-    public static int radius;
+    public int radius;
 
     private static final String TAG = "Proton";
 
+    // Proton radius multiplier
     public static int sizeRatio = Math.round(10 * Gdx.graphics.getDensity());
 
     public Proton(int mass, Vector2 position, Vector2 velocity, Vector2 acceleration){
