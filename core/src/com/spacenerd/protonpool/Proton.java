@@ -60,14 +60,13 @@ public class Proton {
     }
 
     public void draw(ShapeRenderer shapeRenderer){
-        Preferences prefs = Gdx.app.getPreferences("Preferences");
         shapeRenderer.setColor(0.7f, 0, 0, 1);
         shapeRenderer.circle(position.x, position.y, radius);
-        if(prefs.getBoolean("showVelocity", false)){
+        if(ProtonPool.prefs.getBoolean("showVelocity", false)){
             shapeRenderer.setColor(0, 1, 0, 1);
             shapeRenderer.line(position, position.cpy().add(velocity));
         }
-        if(prefs.getBoolean("showAcceleration", false)){
+        if(ProtonPool.prefs.getBoolean("showAcceleration", false)){
             shapeRenderer.setColor(0, 0, 1, 1);
             shapeRenderer.line(position, position.cpy().add(acceleration));
         }

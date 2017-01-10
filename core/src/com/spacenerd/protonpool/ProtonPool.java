@@ -17,7 +17,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
     private static final float forceConstant = 500000;
 
     private ShapeRenderer shapeRenderer;
-    private Preferences prefs; // User preferences
+    public static Preferences prefs; // User preferences
 
     private static final String TAG = "ProtonPool";
 	
