@@ -4,7 +4,12 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,6 +18,8 @@ import java.util.ArrayList;
 public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 	private ArrayList<Proton> protons; // List of protons
     private ArrayList<Proton> toRemove; // List of protons to remove after collisions
+
+    private MainUi ui;
 
     private static final float forceConstant = 500000;
 
@@ -29,12 +36,30 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         prefs.putBoolean("showAcceleration", true);
         prefs.flush();
 
+//        AssetManager manager = new AssetManager();
+//        FileHandleResolver resolver = new InternalFileHandleResolver();
+//        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+//        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+//
+//        //load the label font
+//        FreeTypeFontLoaderParameter labelFontParams = new FreeTypeFontLoaderParameter();
+//        labelFontParams.fontFileName = "fonts/Roboto/Roboto-Regular.ttf";
+//        labelFontParams.fontParameters.size = Math.round(20.0f * Gdx.graphics.getDensity());
+//        manager.load("fonts/Roboto/Roboto-Regular.ttf", BitmapFont.class, labelFontParams);
+//
+//        manager.finishLoading();
+//
+//        BitmapFont font = manager.get("fonts/Roboto/Roboto-Regular.ttf");
+
         Gdx.input.setInputProcessor(this);
 
         protons = new ArrayList<Proton>();
         toRemove = new ArrayList<Proton>();
 
         shapeRenderer = new ShapeRenderer();
+
+//        ui = new MainUi();
+//        Gdx.input.setInputProcessor(ui.stage);
 	}
 
 	@Override
@@ -53,6 +78,8 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
                 proton.draw(shapeRenderer); // Draw protons
             }
         shapeRenderer.end();
+
+        ui.draw();
 	}
 	
 	@Override
