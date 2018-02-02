@@ -70,16 +70,14 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         // Draw protons
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             force(); // Calculate forces between protons, find collisions
-            for(int i = 0; i < toRemove.size(); i++){
-                protons.remove(toRemove.get(i)); // Remove protons that have collided and merged
-            }
+            protons.removeAll(toRemove);
             for(Proton proton: protons){
                 proton.step(); // Calculate new velocities, positions for protons
                 proton.draw(shapeRenderer); // Draw protons
             }
         shapeRenderer.end();
 
-        ui.draw();
+//        ui.draw();
 	}
 	
 	@Override
@@ -117,8 +115,10 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
                         // Remove smaller proton from simulation
                         toRemove.add(other);
 
-                        Gdx.app.log(TAG, "Merge event at " + main.position);
-                        Gdx.app.log(TAG, "Merge mass: " + main.mass);
+                        Gdx.app.log(
+                                TAG,
+                                "Merge event at " + main.position + ", mass: " + main.mass
+                        );
                     }
                 }
             }
