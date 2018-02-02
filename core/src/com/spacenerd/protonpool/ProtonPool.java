@@ -29,6 +29,7 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
 
     private ShapeRenderer shapeRenderer;
     public static Preferences prefs; // User preferences
+    private static boolean paused;
 
     private static final String TAG = "ProtonPool";
 	
@@ -40,57 +41,22 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         prefs.putBoolean("showAcceleration", true);
         prefs.flush();
 
-        float fontSize = 20.0f * Gdx.graphics.getDensity();
-
         // Set up asset manager
         AssetManager assetManager = new AssetManager();
-
-        FileHandleResolver resolver = new InternalFileHandleResolver();
-        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-
-        // Checkbox font
-        FreetypeFontLoader.FreeTypeFontLoaderParameter checkboxFontParams = new FreeTypeFontLoaderParameter();
-        checkboxFontParams.fontFileName = "fonts/Roboto/Roboto-Regular.ttf";
-        checkboxFontParams.fontParameters.size = Math.round(20.0f * Gdx.graphics.getDensity());
-        assetManager.load("fonts/Roboto/Roboto-Regular.ttf", BitmapFont.class, checkboxFontParams);
-
+        loadAssets(assetManager);
         assetManager.finishLoading();
 
-//        BitmapFont font = manager.get("fonts/Roboto/Roboto-Regular.ttf");
-
         Gdx.input.setInputProcessor(this);
+
+        paused = false;
 
         protons = new ArrayList<Proton>();
         toRemove = new ArrayList<Proton>();
 
         shapeRenderer = new ShapeRenderer();
 
-//        ui = new MainUi();
-//        Gdx.input.setInputProcessor(ui.stage);
-	}
-
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Draw protons
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            force(); // Calculate forces between protons, find collisions
-            protons.removeAll(toRemove);
-            for(Proton proton: protons){
-                proton.step(); // Calculate new velocities, positions for protons
-                proton.draw(shapeRenderer); // Draw protons
-            }
-        shapeRenderer.end();
-
-//        ui.draw();
-	}
-	
-	@Override
-	public void dispose () {
-        shapeRenderer.dispose();
+        ui = new MainUi(assetManager);
+        Gdx.input.setInputProcessor(ui.stage);
 	}
 
     private void force(){
@@ -135,6 +101,71 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         }
     }
 
+	@Override
+	public void render () {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Draw protons
+        if(!paused) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            force(); // Calculate forces between protons, find collisions
+            protons.removeAll(toRemove);
+            for (Proton proton : protons) {
+                proton.step(); // Calculate new velocities, positions for protons
+                proton.draw(shapeRenderer); // Draw protons
+            }
+            shapeRenderer.end();
+        }
+
+        ui.draw();
+	}
+
+	public void loadAssets(AssetManager assetManager){
+        float fontSize = 20.0f * Gdx.graphics.getDensity();
+
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+
+        // Checkbox font
+        FreetypeFontLoader.FreeTypeFontLoaderParameter checkboxFontParams = new FreeTypeFontLoaderParameter();
+        checkboxFontParams.fontFileName = "fonts/Roboto/Roboto-Regular.ttf";
+        checkboxFontParams.fontParameters.size = Math.round(fontSize);
+        assetManager.load("fonts/Roboto/Roboto-Regular.ttf", BitmapFont.class, checkboxFontParams);
+
+        // Buttons
+        assetManager.load("buttons/settings.png", Texture.class);
+        assetManager.load("buttons/checked-checkbox.png", Texture.class);
+        assetManager.load("buttons/unchecked-checkbox.png", Texture.class);
+    }
+
+    public static void setPaused(boolean p){
+	    paused = p;
+    }
+
+    public static boolean getPaused(){
+	    return paused;
+    }
+	
+	@Override
+	public void dispose () {
+        shapeRenderer.dispose();
+	}
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // Add a new proton at the specified position
+        protons.add(new Proton(
+                1, // Mass
+                new Vector2(screenX, Gdx.graphics.getHeight() - screenY), // Position
+                new Vector2(0, 0), // Velocity
+                new Vector2(0, 0) // Acceleration
+        ));
+        Gdx.app.log(TAG, "Added proton at (" + screenX + ", " + screenY + ")");
+        return true;
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -153,19 +184,6 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        // Add a new proton at the specified position
-        protons.add(new Proton(
-                1, // Mass
-                new Vector2(screenX, Gdx.graphics.getHeight() - screenY), // Position
-                new Vector2(0, 0), // Velocity
-                new Vector2(0, 0) // Acceleration
-        ));
-        Gdx.app.log(TAG, "Added proton at (" + screenX + ", " + screenY + ")");
-        return true;
     }
 
     @Override
