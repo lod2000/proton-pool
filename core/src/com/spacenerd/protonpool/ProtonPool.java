@@ -10,6 +10,10 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -36,19 +40,23 @@ public class ProtonPool extends ApplicationAdapter implements InputProcessor {
         prefs.putBoolean("showAcceleration", true);
         prefs.flush();
 
-//        AssetManager manager = new AssetManager();
-//        FileHandleResolver resolver = new InternalFileHandleResolver();
-//        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-//        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-//
-//        //load the label font
-//        FreeTypeFontLoaderParameter labelFontParams = new FreeTypeFontLoaderParameter();
-//        labelFontParams.fontFileName = "fonts/Roboto/Roboto-Regular.ttf";
-//        labelFontParams.fontParameters.size = Math.round(20.0f * Gdx.graphics.getDensity());
-//        manager.load("fonts/Roboto/Roboto-Regular.ttf", BitmapFont.class, labelFontParams);
-//
-//        manager.finishLoading();
-//
+        float fontSize = 20.0f * Gdx.graphics.getDensity();
+
+        // Set up asset manager
+        AssetManager assetManager = new AssetManager();
+
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+
+        // Checkbox font
+        FreetypeFontLoader.FreeTypeFontLoaderParameter checkboxFontParams = new FreeTypeFontLoaderParameter();
+        checkboxFontParams.fontFileName = "fonts/Roboto/Roboto-Regular.ttf";
+        checkboxFontParams.fontParameters.size = Math.round(20.0f * Gdx.graphics.getDensity());
+        assetManager.load("fonts/Roboto/Roboto-Regular.ttf", BitmapFont.class, checkboxFontParams);
+
+        assetManager.finishLoading();
+
 //        BitmapFont font = manager.get("fonts/Roboto/Roboto-Regular.ttf");
 
         Gdx.input.setInputProcessor(this);
