@@ -29,11 +29,13 @@ public class MainUi {
     public MainUi(AssetManager assetManager) {
         stage = new Stage();
 
+        // Button settings
         buttonSize = (int) (10 * Gdx.graphics.getDensity());
         buttonGap = (int) (2 * Gdx.graphics.getDensity());
         checkBoxHeight = (int) (20 * Gdx.graphics.getDensity());
         checkBoxGap = (int) (5* Gdx.graphics.getDensity());
 
+        // Checkbox style
         Drawable uncheckedDrawable = new TextureRegionDrawable(
                 new TextureRegion((Texture) assetManager.get("buttons/unchecked-checkbox.png"))
         );
@@ -48,6 +50,7 @@ public class MainUi {
 //        checkBoxStyle.checkboxOff = check_skin.getDrawable("checkbox");
 //        checkBoxStyle.checkboxOn = check_skin.getDrawable("checkbox2");
 
+        // Checkbox for velocity vectors
         showVelocityBox = new CheckBox("Show velocities?", checkBoxStyle);
         showVelocityBox.setPosition(
                 Gdx.graphics.getHeight() - checkBoxGap - checkBoxHeight,
@@ -62,6 +65,7 @@ public class MainUi {
         stage.addActor(showVelocityBox);
         showVelocityBox.setVisible(false);
 
+        // Checkbox for acceleration vectors
         showAccelerationBox = new CheckBox("Show accelerations?", checkBoxStyle);
         showAccelerationBox.setPosition(
                 Gdx.graphics.getHeight() - 2 * checkBoxGap - 2 * checkBoxHeight,
@@ -83,8 +87,8 @@ public class MainUi {
         settingsButton = new ImageButton(settingsDrawable);
         settingsButton.setSize(buttonSize, buttonSize);
         settingsButton.setPosition(
-                Gdx.graphics.getWidth() - buttonGap,
-                Gdx.graphics.getHeight() - buttonGap
+                Gdx.graphics.getWidth() - buttonGap - buttonSize,
+                Gdx.graphics.getHeight() - buttonGap - buttonSize
         );
         settingsButton.addListener(new InputListener() {
             @Override
@@ -108,6 +112,6 @@ public class MainUi {
     }
 
     public void draw() {
-
+        stage.draw();
     }
 }
